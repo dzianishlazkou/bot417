@@ -23,6 +23,8 @@ import os, re, json, logging
 from datetime import datetime, timezone
 from typing import Optional
 
+from init_db import init_schema
+
 from openai import AsyncOpenAI
 from supabase import create_client, Client
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
@@ -874,6 +876,10 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
 def main() -> None:
     log.info("Start — Detective Bot · Multi-Case · Multi-Player")
+
+    # Initialise the database schema before any queries are made.
+    # Safe to call on every restart — skips if tables already exist.
+    init_schema()
 
     app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
 
